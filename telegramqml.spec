@@ -1,5 +1,9 @@
 %global origname TelegramQML
 
+%if 0%{?fedora} <= 24
+%global _qt5_qmldir %{_qt5_archdatadir}/qml
+%endif
+
 Name:           telegramqml
 Version:        2.0.0
 Release:        1%{?dist}
@@ -20,44 +24,22 @@ BuildRequires:  libqtelegram-ae-devel
 %description
 %{summary}.
 
-%package devel
-Summary:        Development files for %{name}
-Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires:       qt5-qtbase-devel%{?_isa}
-Requires:       qt5-qtdeclarative-devel%{?_isa}
-
-%description devel
-%{summary}.
-
 %prep
 %autosetup -n %{origname}-%{version}
 mkdir %{_target_platform}
 
 %build
 pushd %{_target_platform}
-  %qmake_qt5 .. \
-      BUILD_MODE+=lib \
-      CONFIG+=typeobjects \
-      QMAKE_CFLAGS_ISYSTEM= \
-      PREFIX=%{_prefix} \
-      INSTALL_LIBS_PREFIX=%{_libdir} \
-      INSTALL_HEADERS_PREFIX=%{_includedir}
+  %qmake_qt5 QMAKE_CFLAGS_ISYSTEM= ..
 popd
 %make_build -C %{_target_platform}
 
 %install
 %make_install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
-
 %files
 %license LICENSE
-%{_libdir}/lib%{name}.so.*
-
-%files devel
-%{_includedir}/%{name}/
-%{_libdir}/lib%{name}.so
+%{_qt5_qmldir}/TelegramQml/
 
 %changelog
 * Sat Jul 23 2016 Igor Gnatenko <ignatenko@redhat.com> - 2.0.0-1
