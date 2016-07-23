@@ -11,8 +11,10 @@ Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:  gcc-c++
 BuildRequires:  qt5-qtbase-devel
-BuildRequires:  openssl-devel
+BuildRequires:  qt5-qtquick1-devel
 # Only compile-time
+BuildRequires:  openssl-devel
+BuildRequires:  qt5-qtmultimedia-devel
 BuildRequires:  libqtelegram-ae-devel
 
 %description
